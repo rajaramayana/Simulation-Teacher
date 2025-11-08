@@ -9,7 +9,7 @@ import rehypeKatex from 'rehype-katex';
 
 const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { sender: 'ai', text: "Hello! Ask me any question about Simulation and Modeling." }
+    { sender: 'ai', text: "Hello! This is Prof. Raj Kumar Thakur. Write down your question at the bottom of this column." }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
