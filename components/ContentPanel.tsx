@@ -1,8 +1,9 @@
-
 import React from 'react';
 import { Topic } from '../types';
 import { BookOpenIcon } from './Icons';
 import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 interface ContentPanelProps {
   selectedTopic: Topic | null;
@@ -32,7 +33,12 @@ const ContentPanel: React.FC<ContentPanelProps> = ({ selectedTopic, content, isL
         <LoadingSkeleton />
       ) : content ? (
         <article className="prose prose-slate dark:prose-invert max-w-none prose-h3:text-brand-primary dark:prose-h3:text-brand-secondary">
-          <ReactMarkdown>{content}</ReactMarkdown>
+          <ReactMarkdown
+            remarkPlugins={[remarkMath]}
+            rehypePlugins={[rehypeKatex]}
+          >
+            {content}
+          </ReactMarkdown>
         </article>
       ) : (
         <div className="h-full flex flex-col justify-center items-center text-center text-slate-500">

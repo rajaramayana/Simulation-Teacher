@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import Sidebar from './components/Sidebar';
 import ContentPanel from './components/ContentPanel';
@@ -29,26 +28,36 @@ const App: React.FC = () => {
   }, [selectedTopic]);
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-brand-dark font-sans p-4 sm:p-6 lg:p-8">
-      <header className="mb-6">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-brand-primary dark:text-white tracking-tight">
-          Simulation & Modeling Syllabus Explorer
-        </h1>
-        <p className="mt-2 text-slate-600 dark:text-slate-400">
-          An interactive guide to the course curriculum, powered by Gemini.
-        </p>
+    <div className="min-h-screen bg-slate-100 dark:bg-brand-dark font-sans flex flex-col">
+      <header className="bg-gradient-to-b from-white to-slate-100 dark:from-slate-900 dark:to-brand-dark shadow-sm">
+        <div className="text-center py-10 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-brand-primary dark:text-white tracking-tight">
+            Simulation & Modeling Tutor
+          </h1>
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+            Interactive learning and problem-solving assistant for Simulation.
+          </p>
+        </div>
       </header>
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-10rem)] max-h-[800px]">
-        <div className="lg:col-span-3 h-full">
-          <Sidebar onSelectTopic={handleSelectTopic} selectedTopicTitle={selectedTopic?.title || null} />
+
+      <main className="flex-grow p-4 sm:p-6 lg:p-8 flex flex-col">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow max-h-[800px]">
+          <div className="lg:col-span-3 h-full">
+            <Sidebar onSelectTopic={handleSelectTopic} selectedTopicTitle={selectedTopic?.title || null} />
+          </div>
+          <div className="lg:col-span-5 h-full">
+            <ContentPanel selectedTopic={selectedTopic} content={topicContent} isLoading={isLoading} />
+          </div>
+          <div className="lg:col-span-4 h-full">
+            <Chatbot />
+          </div>
         </div>
-        <div className="lg:col-span-6 h-full">
-          <ContentPanel selectedTopic={selectedTopic} content={topicContent} isLoading={isLoading} />
+        <div className="text-center pt-6">
+          <p className="text-sm font-medium text-green-700 dark:text-green-400">
+            Developed by Prof. Raj Kumar Thakur
+          </p>
         </div>
-        <div className="lg:col-span-3 h-full">
-          <Chatbot />
-        </div>
-      </div>
+      </main>
     </div>
   );
 };

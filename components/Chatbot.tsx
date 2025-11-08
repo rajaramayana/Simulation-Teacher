@@ -2,8 +2,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChatMessage } from '../types';
 import { getChatbotResponse } from '../services/geminiService';
-import { SendIcon, ChatBubbleIcon } from './Icons';
+import { SendIcon, ChatBubbleIcon, LinkIcon } from './Icons';
 import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -28,8 +30,8 @@ const Chatbot: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const aiResponseText = await getChatbotResponse(input, messages);
-      const aiMessage: ChatMessage = { sender: 'ai', text: aiResponseText };
+      const { text, sources } = await getChatbotResponse(input, messages);
+      const aiMessage: ChatMessage = { sender: 'ai', text, sources };
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
       const errorMessage: ChatMessage = { sender: 'ai', text: "Sorry, I'm having trouble connecting. Please try again." };
@@ -54,10 +56,36 @@ const Chatbot: React.FC = () => {
       <div className="flex-grow overflow-y-auto mb-4 pr-2 space-y-4">
         {messages.map((msg, index) => (
           <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-xs md:max-w-md lg:max-w-xs xl:max-w-md rounded-lg px-4 py-2 ${msg.sender === 'user' ? 'bg-brand-secondary text-white' : 'bg-slate-200 dark:bg-slate-800'}`}>
+            <div className={`max-w-xs sm:max-w-sm md:max-w-md rounded-lg px-4 py-2 ${msg.sender === 'user' ? 'bg-brand-secondary text-white' : 'bg-slate-200 dark:bg-slate-800'}`}>
                <div className="prose prose-sm dark:prose-invert max-w-none">
-                 <ReactMarkdown>{msg.text}</ReactMarkdown>
+                 <ReactMarkdown
+                    remarkPlugins={[remarkMath]}
+                    rehypePlugins={[rehypeKatex]}
+                 >
+                    {msg.text}
+                 </ReactMarkdown>
                </div>
+               {msg.sources && msg.sources.length > 0 && (
+                 <div className="mt-3 pt-2 border-t border-slate-300 dark:border-slate-700">
+                   <h4 className="text-xs font-semibold mb-1 text-slate-600 dark:text-slate-400">Sources:</h4>
+                   <ul className="space-y-1">
+                     {msg.sources.map((source, i) => (
+                       <li key={i} className="flex items-start">
+                         <LinkIcon className="h-3 w-3 mr-1.5 mt-0.5 flex-shrink-0 text-slate-500"/>
+                         <a 
+                           href={source.uri} 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           className="text-xs text-brand-secondary hover:underline truncate"
+                           title={source.title}
+                         >
+                           {source.title || new URL(source.uri).hostname}
+                         </a>
+                       </li>
+                     ))}
+                   </ul>
+                 </div>
+               )}
             </div>
           </div>
         ))}

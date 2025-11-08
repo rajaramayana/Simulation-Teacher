@@ -10,7 +10,13 @@ export interface Unit {
   topics: Topic[];
 }
 
+export interface Source {
+  title: string;
+  uri: string;
+}
+
 export interface ChatMessage {
   sender: 'user' | 'ai';
   text: string;
+  sources?: Source[];
 }

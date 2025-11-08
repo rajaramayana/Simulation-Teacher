@@ -1,5 +1,5 @@
 {
-  "name": "Simulation Syllabus Explorer",
+  "name": "Simulation & Modeling Tutor",
   "description": "An interactive web app to explore a 'Simulation and Modeling' syllabus. Click on topics to get AI-generated explanations and examples, and use the integrated chatbot to ask questions about the course content.",
   "requestFramePermissions": []
 }
